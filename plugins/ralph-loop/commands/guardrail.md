@@ -1,6 +1,6 @@
 ---
 description: "Manage global guardrails"
-argument-hint: "list | add \"rule\" | sign \"failure\" | clear"
+argument-hint: 'add "Always run tests" | sign "Forgot to check types" | list | clear'
 allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/manage-guardrails.sh:*)"]
 hide-from-slash-command-tool: "true"
 ---

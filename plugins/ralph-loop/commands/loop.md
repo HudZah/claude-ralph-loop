@@ -1,6 +1,6 @@
 ---
 description: "Start Ralph Loop with session persistence and guardrails"
-argument-hint: "PROMPT [--max-iterations N] [--completion-promise TEXT]"
+argument-hint: '"Build a REST API" [--max-iterations 20] [--completion-promise "All tests pass"]'
 allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh:*)"]
 hide-from-slash-command-tool: "true"
 ---

@@ -1,6 +1,6 @@
 ---
 description: "Resume a previous Ralph session"
-argument-hint: "<session-id>"
+argument-hint: "2024-01-12_build-a-rest-api"
 allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/resume-session.sh:*)"]
 hide-from-slash-command-tool: "true"
 ---
