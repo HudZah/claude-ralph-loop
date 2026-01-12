@@ -137,30 +137,30 @@ else
   COMPLETION_PROMISE_YAML="null"
 fi
 
-# Create session state file
-cat > "$SESSION_DIR/state.md" << EOF
----
-active: true
-iteration: 1
-max_iterations: $MAX_ITERATIONS
-completion_promise: $COMPLETION_PROMISE_YAML
-started_at: "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-session_id: "$SESSION_ID"
----
+# Create session state file - use printf to avoid shell expansion of prompt
+{
+  echo "---"
+  echo "active: true"
+  echo "iteration: 1"
+  echo "max_iterations: $MAX_ITERATIONS"
+  echo "completion_promise: $COMPLETION_PROMISE_YAML"
+  echo "started_at: \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\""
+  echo "session_id: \"$SESSION_ID\""
+  echo "---"
+  echo ""
+  printf '%s\n' "$PROMPT"
+} > "$SESSION_DIR/state.md"
 
-$PROMPT
-EOF
-
-# Create session progress file
-cat > "$SESSION_DIR/progress.md" << EOF
-# Session: $SESSION_ID
-
-**Started**: $(date -u +%Y-%m-%dT%H:%M:%SZ)
-**Task**: $PROMPT
-
-## Iterations
-
-EOF
+# Create session progress file - use printf to avoid shell expansion of prompt
+{
+  echo "# Session: $SESSION_ID"
+  echo ""
+  echo "**Started**: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  printf '**Task**: %s\n' "$PROMPT"
+  echo ""
+  echo "## Iterations"
+  echo ""
+} > "$SESSION_DIR/progress.md"
 
 # Create session errors log
 touch "$SESSION_DIR/errors.log"
@@ -201,9 +201,9 @@ cat "$RALPH_DIR/guardrails.md"
 echo "================================================"
 echo ""
 
-# Output the prompt
+# Output the prompt - use printf to avoid shell expansion
 echo "TASK:"
-echo "$PROMPT"
+printf '%s\n' "$PROMPT"
 echo ""
 
 # Display completion promise requirements if set
