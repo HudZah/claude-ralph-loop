@@ -1,7 +1,7 @@
 {
   "name": "ralph-loop",
   "description": "Enhanced Ralph Loop for iterative development with session persistence, guardrails, and progress tracking",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "hudzah"
   },

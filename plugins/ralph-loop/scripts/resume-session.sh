@@ -4,6 +4,11 @@
 
 set -euo pipefail
 
+# Handle arguments passed via RALPH_ARGS environment variable
+if [[ -n "${RALPH_ARGS:-}" ]]; then
+  eval "set -- $RALPH_ARGS"
+fi
+
 SESSION_ID="${1:-}"
 
 if [[ -z "$SESSION_ID" ]]; then

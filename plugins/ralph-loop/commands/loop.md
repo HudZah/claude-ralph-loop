@@ -10,7 +10,7 @@ hide-from-slash-command-tool: "true"
 Execute the setup script to initialize a new Ralph loop session:
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh" $ARGUMENTS
+RALPH_ARGS="$ARGUMENTS" "${CLAUDE_PLUGIN_ROOT}/scripts/setup-ralph-loop.sh"
 ```
 
 After initialization, work on the task. When you try to exit, the stop hook will intercept and feed the SAME PROMPT back. You'll see your previous work in files, creating an iterative loop.

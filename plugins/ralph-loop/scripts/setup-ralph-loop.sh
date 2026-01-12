@@ -5,6 +5,12 @@
 
 set -euo pipefail
 
+# Handle arguments passed via RALPH_ARGS environment variable
+# This avoids shell metacharacter interpretation for prompts with special chars
+if [[ -n "${RALPH_ARGS:-}" ]]; then
+  eval "set -- $RALPH_ARGS"
+fi
+
 # Parse arguments
 PROMPT_PARTS=()
 MAX_ITERATIONS=0

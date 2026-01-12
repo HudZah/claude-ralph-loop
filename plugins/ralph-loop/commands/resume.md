@@ -10,7 +10,7 @@ hide-from-slash-command-tool: "true"
 Execute the resume script with the session ID:
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/resume-session.sh" $ARGUMENTS
+RALPH_ARGS="$ARGUMENTS" "${CLAUDE_PLUGIN_ROOT}/scripts/resume-session.sh"
 ```
 
 This will:
