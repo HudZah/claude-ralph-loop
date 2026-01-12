@@ -5,8 +5,5 @@
   "author": {
     "name": "hudzah"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hudzah/claude-ralph-loop"
-  }
+  "repository": "https://github.com/hudzah/claude-ralph-loop"
 }
