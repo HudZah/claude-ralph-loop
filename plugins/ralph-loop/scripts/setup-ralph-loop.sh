@@ -24,7 +24,7 @@ while [[ $# -gt 0 ]]; do
 Ralph Loop (Enhanced) - Iterative development with session persistence
 
 USAGE:
-  /ralph-loop:ralph-loop [PROMPT...] [OPTIONS]
+  /ralph-loop:loop [PROMPT...] [OPTIONS]
 
 ARGUMENTS:
   PROMPT...    Initial prompt to start the loop (can be multiple words)
@@ -44,9 +44,9 @@ DESCRIPTION:
   To signal completion, output: <promise>YOUR_PHRASE</promise>
 
 EXAMPLES:
-  /ralph-loop:ralph-loop Build a todo API --completion-promise 'DONE' --max-iterations 20
-  /ralph-loop:ralph-loop --max-iterations 10 Fix the auth bug
-  /ralph-loop:ralph-loop Refactor cache layer  (runs forever)
+  /ralph-loop:loop Build a todo API --completion-promise 'DONE' --max-iterations 20
+  /ralph-loop:loop --max-iterations 10 Fix the auth bug
+  /ralph-loop:loop Refactor cache layer  (runs forever)
 
 SESSION MANAGEMENT:
   /ralph-loop:sessions      List all past sessions
@@ -91,8 +91,8 @@ if [[ -z "$PROMPT" ]]; then
   echo "Error: No prompt provided" >&2
   echo "" >&2
   echo "Examples:" >&2
-  echo "  /ralph-loop:ralph-loop Build a REST API for todos" >&2
-  echo "  /ralph-loop:ralph-loop Fix the auth bug --max-iterations 20" >&2
+  echo "  /ralph-loop:loop Build a REST API for todos" >&2
+  echo "  /ralph-loop:loop Fix the auth bug --max-iterations 20" >&2
   exit 1
 fi
 

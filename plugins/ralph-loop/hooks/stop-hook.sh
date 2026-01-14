@@ -163,33 +163,33 @@ _Work in progress..._
 
 EOF
 
-# Build system message
-GUARDRAILS_MSG=""
+# Build combined reason with iteration info, guardrails, and prompt
+REASON="Ralph iteration $NEXT_ITERATION"
+
+if [[ "$COMPLETION_PROMISE" != "null" ]] && [[ -n "$COMPLETION_PROMISE" ]]; then
+  REASON="$REASON | Complete: <promise>$COMPLETION_PROMISE</promise> (ONLY when TRUE!)"
+else
+  REASON="$REASON | No promise set - loop continues"
+fi
+
+# Add guardrails if present
 if [[ -f "$RALPH_DIR/guardrails.md" ]]; then
-  # Extract just the Active Rules section
   RULES=$(sed -n '/^## Active Rules/,/^##/p' "$RALPH_DIR/guardrails.md" | head -20)
   if [[ -n "$RULES" ]]; then
-    GUARDRAILS_MSG="
+    REASON="$REASON
 
 GUARDRAILS:
 $RULES"
   fi
 fi
 
-if [[ "$COMPLETION_PROMISE" != "null" ]] && [[ -n "$COMPLETION_PROMISE" ]]; then
-  SYSTEM_MSG="Ralph iteration $NEXT_ITERATION | Complete: <promise>$COMPLETION_PROMISE</promise> (ONLY when TRUE!)$GUARDRAILS_MSG"
-else
-  SYSTEM_MSG="Ralph iteration $NEXT_ITERATION | No promise set - loop runs infinitely$GUARDRAILS_MSG"
-fi
+# Add the task prompt
+REASON="$REASON
 
-# Output JSON to block stop and feed prompt back
-jq -n \
-  --arg prompt "$PROMPT_TEXT" \
-  --arg msg "$SYSTEM_MSG" \
-  '{
-    "decision": "block",
-    "reason": $prompt,
-    "systemMessage": $msg
-  }'
+TASK:
+$PROMPT_TEXT"
+
+# Output valid JSON to block stop and feed reason back to Claude
+jq -n --arg reason "$REASON" '{"decision": "block", "reason": $reason}'
 
 exit 0

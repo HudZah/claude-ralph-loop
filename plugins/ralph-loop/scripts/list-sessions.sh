@@ -11,7 +11,7 @@ if [[ ! -d "$SESSIONS_DIR" ]]; then
   echo "No Ralph sessions found."
   echo ""
   echo "Start a new session with:"
-  echo "  /ralph-loop:ralph-loop \"Your task here\""
+  echo "  /ralph-loop:loop \"Your task here\""
   exit 0
 fi
 
