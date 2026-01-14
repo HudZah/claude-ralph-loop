@@ -10,7 +10,7 @@ hide-from-slash-command-tool: "true"
 Execute the guardrails script:
 
 ```!
-RALPH_ARGS="$ARGUMENTS" "${CLAUDE_PLUGIN_ROOT}/scripts/manage-guardrails.sh"
+RALPH_ARGS=$ARGUMENTS "${CLAUDE_PLUGIN_ROOT}/scripts/manage-guardrails.sh"
 ```
 
 ## Commands
