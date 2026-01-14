@@ -75,6 +75,8 @@ if [[ $MAX_ITERATIONS -gt 0 ]] && [[ $ITERATION -ge $MAX_ITERATIONS ]]; then
 EOF
 
   rm -f "$CURRENT_LINK"
+  # Clean up the installed stop hook
+  rm -f ".claude/hooks/ralph-stop.sh"
   exit 0
 fi
 
@@ -130,6 +132,8 @@ if [[ "$COMPLETION_PROMISE" != "null" ]] && [[ -n "$COMPLETION_PROMISE" ]]; then
 EOF
 
     rm -f "$CURRENT_LINK"
+    # Clean up the installed stop hook
+    rm -f ".claude/hooks/ralph-stop.sh"
     exit 0
   fi
 fi

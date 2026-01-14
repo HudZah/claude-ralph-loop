@@ -23,12 +23,50 @@ fi
 RALPH_DIR=".ralph"
 SESSION_DIR="$RALPH_DIR/sessions/$SESSION_ID"
 STATE_FILE="$SESSION_DIR/state.md"
+CLAUDE_HOOKS_DIR=".claude/hooks"
+HOOK_FILE="$CLAUDE_HOOKS_DIR/ralph-stop.sh"
+SETTINGS_FILE=".claude/settings.local.json"
 
 if [[ ! -f "$STATE_FILE" ]]; then
   echo "Error: Session not found: $SESSION_ID" >&2
   echo "" >&2
   echo "List sessions with: /ralph-loop:sessions" >&2
   exit 1
+fi
+
+# Ensure the stop hook is installed (may have been cleaned up)
+mkdir -p "$CLAUDE_HOOKS_DIR"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="$(dirname "$SCRIPT_DIR")"
+
+if [[ -f "$PLUGIN_ROOT/hooks/stop-hook.sh" ]]; then
+  cp "$PLUGIN_ROOT/hooks/stop-hook.sh" "$HOOK_FILE"
+  chmod +x "$HOOK_FILE"
+fi
+
+# Ensure hook is registered in settings.local.json
+if [[ -f "$SETTINGS_FILE" ]]; then
+  if ! jq -e '.hooks.Stop' "$SETTINGS_FILE" > /dev/null 2>&1; then
+    jq '.hooks.Stop = [{"hooks": [{"type": "command", "command": ".claude/hooks/ralph-stop.sh"}]}]' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp"
+    mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+  fi
+else
+  cat > "$SETTINGS_FILE" << 'SETTINGS_EOF'
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/ralph-stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+SETTINGS_EOF
 fi
 
 # Parse state file

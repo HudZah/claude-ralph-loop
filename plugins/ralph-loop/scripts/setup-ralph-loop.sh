@@ -105,8 +105,49 @@ SESSION_ID="${DATE_PREFIX}_${SLUG}"
 # Create .ralph directory structure
 RALPH_DIR=".ralph"
 SESSION_DIR="$RALPH_DIR/sessions/$SESSION_ID"
+CLAUDE_HOOKS_DIR=".claude/hooks"
+HOOK_FILE="$CLAUDE_HOOKS_DIR/ralph-stop.sh"
+SETTINGS_FILE=".claude/settings.local.json"
 
 mkdir -p "$SESSION_DIR"
+mkdir -p "$CLAUDE_HOOKS_DIR"
+
+# Install the stop hook directly to .claude/hooks/ (workaround for Claude Code plugin hook bug)
+# The hook needs to be in .claude/hooks/ for Claude Code to capture its JSON output
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="$(dirname "$SCRIPT_DIR")"
+
+if [[ -f "$PLUGIN_ROOT/hooks/stop-hook.sh" ]]; then
+  cp "$PLUGIN_ROOT/hooks/stop-hook.sh" "$HOOK_FILE"
+  chmod +x "$HOOK_FILE"
+fi
+
+# Register the hook in settings.local.json
+if [[ -f "$SETTINGS_FILE" ]]; then
+  # Update existing settings - add Stop hook if not present
+  if ! jq -e '.hooks.Stop' "$SETTINGS_FILE" > /dev/null 2>&1; then
+    jq '.hooks.Stop = [{"hooks": [{"type": "command", "command": ".claude/hooks/ralph-stop.sh"}]}]' "$SETTINGS_FILE" > "${SETTINGS_FILE}.tmp"
+    mv "${SETTINGS_FILE}.tmp" "$SETTINGS_FILE"
+  fi
+else
+  # Create new settings file with the hook
+  cat > "$SETTINGS_FILE" << 'SETTINGS_EOF'
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/ralph-stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+SETTINGS_EOF
+fi
 
 # Initialize guardrails.md if not exists
 if [[ ! -f "$RALPH_DIR/guardrails.md" ]]; then
